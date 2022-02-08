@@ -1,4 +1,5 @@
 import os
+from utils.sockets import socket_connection
 from utils import sockets
 import socket
 
@@ -8,10 +9,8 @@ def clear():
 
 
 def main():
-    socket_server = sockets.socket_connection()
-    while True:
-        message = socket_server.receive()
-        socket_server.send(message)
+    socket_server = socket_connection()
+    socket_server.server_connect("test")
 
 
 main()

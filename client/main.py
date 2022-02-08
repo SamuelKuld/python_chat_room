@@ -31,11 +31,7 @@ def test():
 
 def test_socket():
     socket_client = socket_connection()
-    while 1:
-        print(">>> ", end="")
-        user_in = input()
-        socket_client.send(user_in)
-        print(socket_client.receive())
+    print(socket_client.receive())
 
 
 if __name__ == '__main__':
