@@ -8,10 +8,10 @@ def clear():
 
 
 def main():
-    socket_server = sockets.socket_connection(
-        socket.gethostname(),
-        80)
-    socket_server.send("test")
+    socket_server = sockets.socket_connection()
+    while True:
+        message = socket_server.receive()
+        socket_server.send(message)
 
 
 main()
