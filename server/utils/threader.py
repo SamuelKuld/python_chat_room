@@ -4,17 +4,14 @@ import threading
 
 
 class threader(threading.Thread):
-    def __init__(self, name, function, *args):
+    def __init__(self, name, function, arguments=None):
         threading.Thread.__init__(self)
         self.name = name
         self.function = function
-        self.args = args
+        self.arguments = arguments
 
     def run(self):
-        if len(self.args) > 0:
-            self.function(self.args)
-        else:
-            self.function()
+        self.function(self.arguments)
 
 
 def test_function(amount):
