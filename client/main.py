@@ -29,12 +29,19 @@ def test():
     test_chat()
 
 
+def receive_always(socket_thing):
+    while True:
+        print(socket_thing.receive())
+
+
 def test_socket():
     socket_client = socket_connection()
     socket_client.connect()
-    print(socket_client.receive())
-    socket_client.send(bytes(input(), encoding="ASCII"))
-    print(socket_client.receive())
+
+    receiver = threader("receiver", receive_always, socket_client)
+    receiver.start()
+    while True:
+        socket_client.send(bytes(input(), encoding="ASCII"))
 
 
 if __name__ == '__main__':
