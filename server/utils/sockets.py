@@ -8,20 +8,26 @@ class socket_connection():
         self.socket_internal_connection = socket.socket(
             socket.AF_INET, socket.SOCK_STREAM)
 
+    def connect(self):
+        self.socket_internal_connection.connect((self.address, self.port))
+
     def send(self, message):
         self.socket_internal_connection.send(message)
 
-    def server_send(self, message, connection):
-        connection.send(bytes(message, encoding="ASCII"))
+    def receive(self, address=socket.gethostname(), port=80):
+        info = self.socket_internal_connection.recv(2048)
+        return info
 
-    def server_connect(self, message):
+    def server_setup(self):
         self.socket_internal_connection.bind((self.address, self.port))
         self.socket_internal_connection.listen()
-        connection, address = self.socket_internal_connection.accept()
-        self.server_send(message, connection)
 
-    def receive(self):
-        return self.socket_internal_connection.recv()
+    def server_send(self, message, connection):
+        connection.send(bytes(message, encoding="ASCII"))
+        return message
 
-    def destroy(self):
+    def server_connect(self):
+        return self.socket_internal_connection.accept()
+
+    def close(self):
         self.socket_internal_connection.close()

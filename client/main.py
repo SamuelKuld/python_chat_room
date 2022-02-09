@@ -31,6 +31,9 @@ def test():
 
 def test_socket():
     socket_client = socket_connection()
+    socket_client.connect()
+    print(socket_client.receive())
+    socket_client.send(bytes(input(), encoding="ASCII"))
     print(socket_client.receive())
 
 
