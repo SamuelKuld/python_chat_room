@@ -1,9 +1,7 @@
 import os
-
+import time
 from matplotlib.pyplot import connect
 from utils.sockets import socket_connection
-from utils import sockets
-import socket
 from utils.threader import threader
 
 
@@ -11,16 +9,28 @@ def clear():
     os.system("cls")
 
 
-connections = []
+connections = {}
 
 
-def handle_connection(connection):
-    print(connections)
+def write_chat_to_file(chat):
+    with open("chats.txt", "a+") as chats:
+        chats.write(chat + "\n")
+
+
+def handle_connection(arg_tuple):
+    global last_chat
     while True:
+        connection, sent_username = arg_tuple
         item = connection.recv(2048)
-        print(item)
-        for i in connections:
-            i.send(item)
+        item_decoded = item.decode()
+        print(f"{sent_username.decode()} : {item_decoded}")
+
+        for username, value in connections.items():
+            if connection != value:
+                value.send(
+                    bytes(f"{sent_username.decode()} : {item_decoded}", encoding="ASCII"))
+                write_chat_to_file(
+                    f"{sent_username.decode()} : {item_decoded} : {time.time()}")
 
 
 def main():
@@ -31,9 +41,11 @@ def main():
         print("Connection")
         amount += 1
         connection, addr = socket_server.server_connect()
-        connections.append(connection)
+        username = connection.recv(4096)
+        write_chat_to_file(username.decode() + " joined ")
+        connections[username.decode()] = connection
         connection_handle = threader("connection" + str(amount),
-                                     handle_connection, connection)
+                                     handle_connection, (connection, username))
         connection_handle.start()
 
 

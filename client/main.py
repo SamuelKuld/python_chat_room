@@ -29,19 +29,22 @@ def test():
     test_chat()
 
 
-def receive_always(socket_thing):
+def receive_always(arg_tuple):
+    socket_thing, username = arg_tuple
     while True:
-        print(socket_thing.receive())
+        print("\n" + socket_thing.receive().decode(),
+              "\n" + username + " : ", end="")
 
 
 def test_socket():
     socket_client = socket_connection()
     socket_client.connect()
-
-    receiver = threader("receiver", receive_always, socket_client)
+    username = input(f"Username : ")
+    socket_client.send(bytes(username, encoding="ASCII"))
+    receiver = threader("receiver", receive_always, (socket_client, username))
     receiver.start()
     while True:
-        socket_client.send(bytes(input(), encoding="ASCII"))
+        socket_client.send(bytes(input(f"{username} : "), encoding="ASCII"))
 
 
 if __name__ == '__main__':
