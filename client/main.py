@@ -6,6 +6,9 @@ from utils.threader import *
 from utils.sockets import *
 
 
+chat_buffer = []
+
+
 def clear():
     os.system("cls")
 
@@ -32,7 +35,13 @@ def test():
 def receive_always(arg_tuple):
     socket_thing, username = arg_tuple
     while True:
-        print("\n" + socket_thing.receive().decode(),
+        message_received = socket_thing.receive().decode()
+        clear()
+        chat_buffer.append(message_received)
+        for message in chat_buffer:
+            print(message)
+        print(chat_buffer)
+        print("\n" + message_received,
               "\n" + username + " : ", end="")
 
 
@@ -44,7 +53,9 @@ def test_socket():
     receiver = threader("receiver", receive_always, (socket_client, username))
     receiver.start()
     while True:
-        socket_client.send(bytes(input(f"{username} : "), encoding="ASCII"))
+        information = input(f"{username} : ")
+        chat_buffer.append(f"{username} : {information}")
+        socket_client.send(bytes(information, encoding="ASCII"))
 
 
 if __name__ == '__main__':
