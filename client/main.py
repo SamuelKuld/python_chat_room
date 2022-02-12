@@ -42,7 +42,9 @@ def receive_always(arg_tuple):
         print("Your username : " + username)
         for message in chat_buffer:
             print(message)
-        print(f"{username} : ", end='')
+        # For some reason it won't print end with nothing. So it has to be the-
+        # Next line.
+        print(f"{username} : ")
 
 
 def main():
@@ -58,7 +60,8 @@ def main():
         print("Your username : " + username)
         for message in chat_buffer:
             print(message)
-        information = input(f"{username} : ")
+        print(f"{username} : ")
+        information = input()
         chat_buffer.append(f"{username} : {information}")
         socket_client.send(bytes(information, encoding="ASCII"))
 
