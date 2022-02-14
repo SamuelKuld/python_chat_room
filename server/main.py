@@ -23,7 +23,7 @@ def handle_connection(arg_tuple):
         connection, sent_username = arg_tuple
         item = connection.recv(2048)
         item_decoded = item.decode()
-        print(f"{sent_username.decode()} : {item_decoded}")
+        print(f"{sent_username.decode()} : '{item_decoded}'\n  [IP : {connection.getpeername()[0]} at time {time.time()}] ")
 
         for username, value in connections.items():
             if connection != value:
