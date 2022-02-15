@@ -46,17 +46,30 @@ def handle_connection(arg_tuple):
             client_object.last_message_time = time.time()
             continue
         client_object.last_message = item_decoded
-        for username, value in connections.items():
-            if client_object.ip != value.ip:
-                try:
-                    value.connection_obj.send(
-                        bytes(f"{sent_username.decode()} : {item_decoded}", encoding="ASCII"))
-                    write_chat_to_file(
-                        f"{sent_username.decode()} : {item_decoded} : {time.time()}")
-                    client_object.last_message_time = time.time()
-                except Exception as e:
-                    del connections[username]
-                    continue
+        try:
+            for username, value in connections.items():
+                if client_object.ip != value.ip:
+                    try:
+                        value.connection_obj.send(
+                            bytes(f"{sent_username.decode()} : {item_decoded}", encoding="ASCII"))
+                        write_chat_to_file(
+                            f"{sent_username.decode()} : {item_decoded} : {time.time()}")
+                        client_object.last_message_time = time.time()
+                    except Exception as e:
+                        del connections[username]
+                        continue
+        except:
+            for username, value in connections.items():
+                if client_object.ip != value.ip:
+                    try:
+                        value.connection_obj.send(
+                            bytes(f"{sent_username.decode()} : {item_decoded}", encoding="ASCII"))
+                        write_chat_to_file(
+                            f"{sent_username.decode()} : {item_decoded} : {time.time()}")
+                        client_object.last_message_time = time.time()
+                    except Exception as e:
+                        del connections[username]
+                        continue
 
 
 def main():
